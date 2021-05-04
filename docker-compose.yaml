@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - ./postgres:/data/postgres/
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin_conteiner
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:5050"
+    expose:
+      - "5050"
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  server:
+    container_name: grpc_server_container
+    build: ./server/
+    environment:
+      APP_ADDRESS: "0.0.0.0:4000"
+      POSTGRES_CONFIG: host=localhost, user=postgres, password=password
+    ports:
+    - "4000:4000"
+    networks:
+      - app_network
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  client:
+    container_name: grpc_client_container
+    build: ./client/
+    environment:
+      SERVER_ADDRESS: "grpc_server_container:4000"
+#      SERVER_ADDRESS: "0.0.0.0:4000"
+#    ports:
+#      - "4000:4000"
+    networks:
+      - app_network
+    depends_on:
+      - server
+#    restart: unless-stopped
+
+networks:
+  app_network:
+    driver: bridge
