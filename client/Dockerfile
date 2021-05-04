@@ -1,5 +1,6 @@
 FROM rust:latest
 
+RUN rustup update
 RUN rustup component add rustfmt
 
 WORKDIR /usr/src/client

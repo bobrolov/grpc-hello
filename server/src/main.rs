@@ -29,7 +29,7 @@ impl Greeter for MyGreeter {
             message: message_to_client.clone(),
         };
         // send data to postgres
-        //postgres_commands::postgres_work(message_to_client, client_address.to_string());
+        postgres_commands::postgres_work(message_to_client, client_address.to_string());
 
         Ok(Response::new(reply))
     }
@@ -49,8 +49,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         info!("Cannot read env, set standart address");
     }
 
-    //let addr = app_address.parse()?;
-    let addr = "[::1]:4000".parse()?;
+    let addr = app_address.parse()?;
     let greeter = MyGreeter::default();
 
     info!("Server work well and listening on {}", addr);

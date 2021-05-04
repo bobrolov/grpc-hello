@@ -33,9 +33,9 @@ services:
 
   server:
     container_name: grpc_server_container
-    build: ./server/
+    build: ./server
     environment:
-      APP_ADDRESS: "0.0.0.0:4000"
+      APP_ADDRESS: 0.0.0.0:4000
       POSTGRES_CONFIG: host=localhost, user=postgres, password=password
     ports:
     - "4000:4000"
@@ -47,9 +47,9 @@ services:
 
   client:
     container_name: grpc_client_container
-    build: ./client/
+    build: ./client
     environment:
-      SERVER_ADDRESS: "grpc_server_container:4000"
+      SERVER_ADDRESS: grpc_server_container:4000
 #      SERVER_ADDRESS: "0.0.0.0:4000"
 #    ports:
 #      - "4000:4000"
